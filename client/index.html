@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>ScienceO</title>
+		<style>
+			html {
+				width: 85vw;
+				margin: 0 auto;
+			}
+
+			.headerSignIn {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+			}
+		</style>
+	</head>
+	<body>
+		<header></header>
+		<section></section>
+	</body>
+
+	<!-- form template -->
+
+	<template id="formSign">
+		<style>
+			.grid {
+				width: 400px;
+				margin: 0 auto;
+				display: grid;
+				gap: 5px;
+			}
+			.btn {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 5px;
+			}
+		</style>
+		<div class="grid">
+			<label for="login">Login</label>
+			<input type="text" id="login" name="login" />
+			<label for="password">Password</label>
+			<input type="password" id="password" name="password" />
+			<div class="btn">
+				<button id="in">Sign In</button>
+				<button id="up">Sign Up</button>
+			</div>
+		</div>
+
+		<script>
+			$('.in:gt(0)').on('click', () => {
+				console.log('fcewfewf')
+				$.post(
+					'http://localhost/Science/server/userController.php',
+					{
+						login: $('input:gt(0)').val(),
+						password: $('input:gt(1)').val(),
+						auth: '1',
+					},
+					() => {
+						window.location.reload()
+					}
+				)
+			})
+		</script>
+	</template>
+
+	<!-- header template -->
+	<template id="headerSignIn">
+		<div class="headerSignIn">
+			<h1>ScienceO</h1>
+			<div>
+				<button id="signin">Sign In</button>
+			</div>
+		</div>
+
+		<script>
+			$('#signin').on('click', () => {
+				let clone = $('#formSign').get(0).content.cloneNode(true)
+				$('section').html('')
+				$('section').get(0).appendChild(clone)
+			})
+		</script>
+	</template>
+
+	<template id="headerSigning">
+		<div class="headerSignIn">
+			<h1>ScienceO:user</h1>
+			<div>
+				<button>Posts</button>
+				<button>Cabinet</button>
+				<button>Sign Out</button>
+			</div>
+		</div>
+	</template>
+
+	<template id="post">
+		<div>
+			<div class="header"></div>
+
+			<button class="body"></button>
+		</div>
+	</template>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script>
+		$.post(
+			'http://localhost/Science/server/userController.php',
+			{ authUser: 1 },
+			data => {
+				if (data == 0) {
+					let clone = $('#headerSignIn').get(0).content.cloneNode(true)
+					$('header').get(0).appendChild(clone)
+				} else {
+					let clone = $('#headerSigning').get(0).content.cloneNode(true)
+					$('header').get(0).appendChild(clone)
+				}
+			}
+		)
+
+		$.post(
+			'http://localhost/Science/server/postController.php',
+			{ all: '1' },
+			data => {
+				let posts = $.parseJSON(data)
+
+				let temp = $('#post')
+
+				posts.forEach(el => {
+					let clone = temp.get(0).content.cloneNode(true)
+					console.log(clone)
+					clone.querySelector('.header').append(el['Name'])
+					clone.querySelector('.body').append('читать далее')
+					$('section').get(0).appendChild(clone)
+				})
+			}
+		)
+	</script>
+</html>
