@@ -5,14 +5,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>ScienceO</title>
 		<style>
-			html {
-				width: 85vw;
-				margin: 0 auto;
+			* {
+				margin: 0;
+				padding: 0;
 			}
+			header {
+				margin-bottom: 15px;
+			}
+			section {
+				width: 55vw;
 
-			.headerSignIn {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
+				margin: 0 auto;
 			}
 		</style>
 	</head>
@@ -21,20 +24,326 @@
 		<section></section>
 	</body>
 
-	<!-- form template -->
+	<!-- #region Templates-->
 
+	<!-- post template -->
+	<template id="postIdA">
+		<style>
+			.grid {
+				display: grid;
+				justify-content: center;
+				text-align: center;
+				gap: 10px;
+				margin-top: 50px;
+				border: 2px black solid;
+				border-radius: 15px;
+				padding: 15px 0;
+				background-color: beige;
+				font-size: 18px;
+				font-weight: bold;
+			}
+
+			.body {
+				margin: 0 15px;
+			}
+			.footer {
+				display: flex;
+				align-items: center;
+				margin: 0 250px;
+				justify-content: space-between;
+				align-content: center;
+			}
+			.footer button {
+				width: 150px;
+				height: 75px;
+				border: none;
+				border-radius: 10px;
+				background-color: lightgreen;
+				font-size: 20px;
+				font-weight: bold;
+				color: green;
+			}
+
+			#rem {
+				background-color: red;
+				color: darkred;
+			}
+
+			.footer button:hover {
+				opacity: 0.5;
+			}
+		</style>
+		<div class="grid">
+			<h1 class="header"></h1>
+			<hr />
+			<div class="body"></div>
+			<hr />
+			<div class="footer">
+				<button id="add">Add</button>
+				<button id="rem">Remove</button>
+			</div>
+		</div>
+
+		<script></script>
+	</template>
+
+	<template id="postId">
+		<style>
+			textarea {
+				resize: none;
+				width: 800px;
+				height: 50px;
+				padding: 5px;
+				font-size: 14px;
+				font-weight: bold;
+				border: solid black 2px;
+				border-radius: 5px;
+			}
+			.grid {
+				display: grid;
+				justify-content: center;
+				text-align: center;
+				gap: 10px;
+				margin-top: 50px;
+				border: 2px black solid;
+				border-radius: 15px;
+				padding: 15px 0;
+				background-color: beige;
+				font-size: 18px;
+				font-weight: bold;
+			}
+
+			.body {
+				margin: 0 15px;
+			}
+			.form {
+				display: flex;
+				align-items: center;
+				margin: 0 15px;
+				justify-content: space-between;
+				align-content: center;
+			}
+			.footer button {
+				width: 75px;
+				height: 75px;
+				border: none;
+				border-radius: 10px;
+				background-color: blue;
+				font-size: 14px;
+				font-weight: bold;
+				color: white;
+			}
+
+			.footer button:hover {
+				opacity: 0.5;
+			}
+		</style>
+		<div class="grid">
+			<h1 class="header"></h1>
+			<hr />
+			<div class="body"></div>
+			<hr />
+			<div class="footer">
+				<div class="footer1"></div>
+				<div class="form">
+					<textarea name="" id="" cols="30" rows="10"></textarea>
+					<button>Add Comment</button>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$.post(
+				'http://localhost/Science/server/userController.php',
+				{ authUser: 1 },
+				data => {
+					if (data == 0) {
+						$('.form').get(0).innerHTML = ''
+					}
+				}
+			)
+		</script>
+	</template>
+
+	<template id="post">
+		<style>
+			section {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+			}
+			.post {
+				width: 300px;
+				display: grid;
+				align-items: self-start;
+				height: 200px;
+				padding: 15px;
+				border: 2px solid black;
+				border-radius: 15px;
+				background-color: aquamarine;
+			}
+
+			.header {
+				font-size: 24px;
+				font-weight: bold;
+				border: 2px solid darkblue;
+				border-radius: 5px;
+				color: black;
+				background-color: white;
+				padding: 10px;
+			}
+
+			.post button {
+				border: none;
+				width: 150px;
+				height: 50px;
+				display: grid;
+				align-self: flex-end;
+				align-content: center;
+				background-color: aqua;
+				border: black 2px solid;
+				border-radius: 10px;
+				color: black;
+				font-size: 16px;
+				font-weight: bold;
+			}
+
+			.post button:hover {
+				opacity: 0.5;
+			}
+		</style>
+		<div class="post">
+			<div class="header"></div>
+
+			<button class="body">Читать далее</button>
+		</div>
+		<script>
+			$('.body').on('click', ev => {
+				let clone = $('#postId').get(0).content.cloneNode(true)
+				$('section').get(0).innerHTML = ''
+				$('section').get(0).appendChild(clone)
+				$.post(
+					'http://localhost/Science/server/postController.php',
+					{ id: ev.target.parentElement.children[0].getAttribute('name') + '' },
+					data => {
+						let post = $.parseJSON(data)
+						$('.header').get(0).innerHTML += post['Name']
+						$('.body').get(0).innerHTML += post['Text']
+					}
+				)
+			})
+		</script>
+	</template>
+
+	<template id="postA">
+		<style>
+			section {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+			}
+			.post {
+				width: 300px;
+				display: grid;
+				align-items: self-start;
+				height: 200px;
+				padding: 15px;
+				border: 2px solid black;
+				border-radius: 15px;
+				background-color: aquamarine;
+			}
+
+			.header {
+				font-size: 24px;
+				font-weight: bold;
+				border: 2px solid darkblue;
+				border-radius: 5px;
+				color: black;
+				background-color: white;
+				padding: 10px;
+			}
+
+			.post button {
+				border: none;
+				width: 150px;
+				height: 50px;
+				display: grid;
+				align-self: flex-end;
+				align-content: center;
+				background-color: aqua;
+				border: black 2px solid;
+				border-radius: 10px;
+				color: black;
+				font-size: 16px;
+				font-weight: bold;
+			}
+
+			.post button:hover {
+				opacity: 0.5;
+			}
+		</style>
+		<div class="post">
+			<div class="header"></div>
+
+			<button class="body">Читать далее</button>
+		</div>
+		<script>
+			$('.body').on('click', ev => {
+				let clone = $('#postIdA').get(0).content.cloneNode(true)
+				$('section').get(0).innerHTML = ''
+				$('section').get(0).appendChild(clone)
+				$.post(
+					'http://localhost/Science/server/postController.php',
+					{
+						id: ev.target.parentElement.children[0].getAttribute('name') + '',
+					},
+					data => {
+						let post = $.parseJSON(data)
+						$('.header').get(0).innerHTML = post['Name']
+						$('.body').get(0).innerHTML += post['Text']
+					}
+				)
+			})
+		</script>
+	</template>
+
+	<!-- form template -->
 	<template id="formSign">
 		<style>
 			.grid {
 				width: 400px;
+				padding: 30px;
 				margin: 0 auto;
 				display: grid;
-				gap: 5px;
+				gap: 15px;
+				font-size: 24px;
+				font-weight: bold;
+				border: 3px solid black;
+				border-radius: 10px;
 			}
+
+			.grid input {
+				border: 2px black solid;
+				border-radius: 5px;
+				padding: 5px;
+				font-size: 18px;
+			}
+
+			.grid button {
+				height: 50px;
+				font-size: 16px;
+				font-weight: bold;
+				background-color: blue;
+				color: white;
+				border: none;
+				border-radius: 15px;
+			}
+			.grid button:hover {
+				opacity: 0.6;
+			}
+
 			.btn {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
-				gap: 5px;
+				gap: 10px;
 			}
 		</style>
 		<div class="grid">
@@ -49,17 +358,34 @@
 		</div>
 
 		<script>
-			$('.in:gt(0)').on('click', () => {
-				console.log('fcewfewf')
+			$('#in').on('click', () => {
 				$.post(
 					'http://localhost/Science/server/userController.php',
 					{
-						login: $('input:gt(0)').val(),
-						password: $('input:gt(1)').val(),
+						login: $('#login').val(),
+						password: $('#password').val(),
 						auth: '1',
 					},
 					() => {
-						window.location.reload()
+						location.reload()
+					}
+				)
+			})
+
+			$('#up').on('click', () => {
+				$.post(
+					'http://localhost/Science/server/userController.php',
+					{
+						login: $('#login').val(),
+						password: $('#password').val(),
+						reg: '1',
+					},
+					data => {
+						if (data == '') {
+							location.reload()
+						}
+
+						alert($.parseJSON(data))
 					}
 				)
 			})
@@ -68,14 +394,51 @@
 
 	<!-- header template -->
 	<template id="headerSignIn">
+		<style>
+			header h1 {
+				color: white;
+			}
+			.headerSignIn {
+				display: flex;
+				grid-template-columns: 1fr 1fr;
+				height: 70px;
+				background-color: black;
+				align-items: center;
+				padding: 0 200px;
+				justify-content: space-around;
+			}
+			.headerSignIn div {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 15px;
+			}
+			header button {
+				width: 100px;
+				height: 50px;
+				font-size: 16px;
+				font-weight: bold;
+				background-color: blue;
+				color: white;
+				border: none;
+				border-radius: 5px;
+			}
+			header button:hover {
+				opacity: 0.6;
+			}
+		</style>
 		<div class="headerSignIn">
 			<h1>ScienceO</h1>
 			<div>
+				<button id="posts">Posts</button>
 				<button id="signin">Sign In</button>
 			</div>
 		</div>
 
 		<script>
+			$('#posts').on('click', () => {
+				location.reload()
+			})
+
 			$('#signin').on('click', () => {
 				let clone = $('#formSign').get(0).content.cloneNode(true)
 				$('section').html('')
@@ -84,24 +447,177 @@
 		</script>
 	</template>
 
-	<template id="headerSigning">
+	<template id="headerClient">
+		<style>
+			header h1 {
+				color: white;
+			}
+			.headerSignIn {
+				display: flex;
+				grid-template-columns: 1fr 1fr;
+				height: 70px;
+				background-color: black;
+				align-items: center;
+				padding: 0 200px;
+				justify-content: space-around;
+			}
+			.headerSignIn div {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				gap: 15px;
+			}
+			header button {
+				width: 100px;
+				height: 50px;
+				font-size: 16px;
+				font-weight: bold;
+				background-color: blue;
+				color: white;
+				border: none;
+				border-radius: 5px;
+			}
+			header button:hover {
+				opacity: 0.6;
+			}
+			#out {
+				background-color: red;
+			}
+		</style>
 		<div class="headerSignIn">
-			<h1>ScienceO:user</h1>
+			<h1>ScienceO:</h1>
 			<div>
-				<button>Posts</button>
-				<button>Cabinet</button>
-				<button>Sign Out</button>
+				<button id="posts">Posts</button>
+				<button id="cab">Cabinet</button>
+				<button id="out">Sign Out</button>
 			</div>
 		</div>
+
+		<script>
+			$.post(
+				'http://localhost/Science/server/userController.php',
+				{ authUser: 1 },
+				data => {
+					$.post(
+						'http://localhost/Science/server/userController.php',
+						{ id: $.parseJSON(data)['id'] },
+						d => {
+							console.log()
+							$('h1').append(' ' + $.parseJSON(d))
+						}
+					)
+				}
+			)
+
+			$('#out').on('click', () => {
+				$.post(
+					'http://localhost/Science/server/userController.php',
+					{ logout: '1' },
+					() => {
+						location.reload()
+					}
+				)
+			})
+
+			$('#posts').on('click', () => {
+				location.reload()
+			})
+		</script>
 	</template>
 
-	<template id="post">
-		<div>
-			<div class="header"></div>
-
-			<button class="body"></button>
+	<template id="headerAdmin">
+		<style>
+			header h1 {
+				color: white;
+			}
+			.headerSignIn {
+				display: flex;
+				grid-template-columns: 1fr 1fr;
+				height: 70px;
+				background-color: black;
+				align-items: center;
+				padding: 0 200px;
+				justify-content: space-around;
+			}
+			.headerSignIn div {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr 1fr;
+				gap: 15px;
+			}
+			header button {
+				width: 100px;
+				height: 50px;
+				font-size: 16px;
+				font-weight: bold;
+				background-color: blue;
+				color: white;
+				border: none;
+				border-radius: 5px;
+			}
+			header button:hover {
+				opacity: 0.6;
+			}
+			#out {
+				background-color: red;
+			}
+		</style>
+		<div class="headerSignIn">
+			<h1>ScienceO:</h1>
+			<div>
+				<button id="user">Users</button>
+				<button id="posts">Posts</button>
+				<button id="com">Comments</button>
+				<button id="out">Sign Out</button>
+			</div>
 		</div>
+
+		<script>
+			$('section').get(0).innerHTML = ''
+
+			$.post(
+				'http://localhost/Science/server/userController.php',
+				{ authUser: 1 },
+				data => {
+					$.post(
+						'http://localhost/Science/server/userController.php',
+						{ id: $.parseJSON(data)['id'] },
+						d => {
+							console.log()
+							$('h1').append(' ' + $.parseJSON(d))
+						}
+					)
+				}
+			)
+
+			$('#out').on('click', () => {
+				$.post(
+					'http://localhost/Science/server/userController.php',
+					{ logout: '1' },
+					() => {
+						location.reload()
+					}
+				)
+			})
+
+			$('#posts').on('click', () => {
+				$.post(
+					'http://localhost/Science/server/postController.php',
+					{ allA: 1 },
+					data => {
+						$('section').get(0).innerHTML = ''
+						let temp = $('#postA')
+						$.parseJSON(data).forEach(el => {
+							let clone = temp.get(0).content.cloneNode(true)
+							clone.querySelector('.header').append(el['Name'])
+							clone.querySelector('.header').setAttribute('name', el['id'])
+							$('section').get(0).appendChild(clone)
+						})
+					}
+				)
+			})
+		</script>
 	</template>
+
+	<!-- #endregion -->
 
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script>
@@ -109,31 +625,34 @@
 			'http://localhost/Science/server/userController.php',
 			{ authUser: 1 },
 			data => {
+				$('header').get(0).innerHTML = ''
 				if (data == 0) {
 					let clone = $('#headerSignIn').get(0).content.cloneNode(true)
 					$('header').get(0).appendChild(clone)
+					return
+				}
+				if ($.parseJSON(data)['role'] == 0) {
+					let clone = $('#headerClient').get(0).content.cloneNode(true)
+					$('header').get(0).appendChild(clone)
+					$.get(
+						'http://localhost/Science/server/postController.php',
+						{ all: '1' },
+						data => {
+							let posts = $.parseJSON(data)
+
+							let temp = $('#post')
+							posts.forEach(el => {
+								let clone = temp.get(0).content.cloneNode(true)
+								clone.querySelector('.header').append(el['Name'])
+								clone.querySelector('.header').setAttribute('name', el['id'])
+								$('section').get(0).appendChild(clone)
+							})
+						}
+					)
 				} else {
-					let clone = $('#headerSigning').get(0).content.cloneNode(true)
+					let clone = $('#headerAdmin').get(0).content.cloneNode(true)
 					$('header').get(0).appendChild(clone)
 				}
-			}
-		)
-
-		$.post(
-			'http://localhost/Science/server/postController.php',
-			{ all: '1' },
-			data => {
-				let posts = $.parseJSON(data)
-
-				let temp = $('#post')
-
-				posts.forEach(el => {
-					let clone = temp.get(0).content.cloneNode(true)
-					console.log(clone)
-					clone.querySelector('.header').append(el['Name'])
-					clone.querySelector('.body').append('читать далее')
-					$('section').get(0).appendChild(clone)
-				})
 			}
 		)
 	</script>

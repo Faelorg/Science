@@ -10,4 +10,6 @@ else
     //No HTTP_ORIGIN set, so we allow any. You can disallow if needed here
     header("Access-Control-Allow-Origin: *");
 }
+
+
 ?>

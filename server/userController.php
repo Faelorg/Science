@@ -42,7 +42,7 @@ function Registration($login, $password){
         }
     }
     else{
-        return json_encode(['code'=>'401', 'text'=>'Пользователь с таким именем уже зарегистрирован'], JSON_UNESCAPED_UNICODE);
+        return json_encode('Пользователь с таким именем уже зарегистрирован', JSON_UNESCAPED_UNICODE);
     }
 }
 
@@ -62,19 +62,15 @@ function Logout(){
 }
 
 function GetAuthorizationUser(){
+    session_start();
     if ( isset($_SESSION["auth"])) {
-        return json_encode(GetUserById($_SESSION['id']));
+        return json_encode($_SESSION);
     }
     else{
-        return '0';
+        return 0;
     }
 }
 
-if (isset($_POST['session'])) {
-    echo json_encode(getSession());
-    session_regenerate_id();
-    exit();
-}
 
 if (isset($_POST["logout"])) {
     Logout();

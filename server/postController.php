@@ -34,7 +34,18 @@ function DeletePost($id){
 
 function GetPosts(){
     global $sql;
-    if($result = $sql->query("SELECT * FROM `Post`")){
+    if($result = $sql->query("SELECT * FROM `Post` where `Status` = 1")){
+        $res = [];
+        foreach ($result as $row) {
+            $res[] = $row;
+        }
+        return json_encode($res,  JSON_UNESCAPED_UNICODE);
+    }
+}
+
+function GetPostsAdmin(){
+    global $sql;
+    if($result = $sql->query("SELECT * FROM `Post` where `Status` = 0")){
         $res = [];
         foreach ($result as $row) {
             $res[] = $row;
@@ -55,10 +66,9 @@ function verifyFunction($id){
     $sql->query("UPDATE `Post` set `Status` = '1' where `id`='$id'");
 }
 
-if (isset($_POST["id"])) {
-    echo GetNameUserById($_POST["id"]);
+if (isset($_POST['id'])) {
+    echo GetPostById($_POST['id']);
 }
-
 
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role']==1) {
@@ -71,7 +81,11 @@ if (isset($_SESSION['role'])) {
                 UpdatePost($_POST['id'],$_POST['name'], $_POST['text']);
             }
         }
-        
+
+        if(isset($_POST['allA'])){
+            echo GetPostsAdmin();
+        }
+
         if (isset($_POST['id']) && isset($_POST['del'])) {
             DeletePost($_POST['id']);
         }
@@ -83,11 +97,8 @@ if (isset($_SESSION['role'])) {
     }
 }
 
-if (isset($_POST['id'])) {
-    echo GetPostById($_GET['id']);
-}
 
-if (isset($_POST['all'])) {
+if (isset($_GET['all'])) {
     echo GetPosts();
 }
 ?>
